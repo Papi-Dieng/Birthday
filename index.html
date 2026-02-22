@@ -7,6 +7,58 @@
 <title>Happy Birthday Latifa</title>
 
 <style>
+/* ================= COUNTDOWN LOCK ================= */
+
+#birthdayLock{
+    position: fixed;
+    inset: 0;
+    background: #ffcdd4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+    flex-direction: column;
+}
+
+.countdown-title{
+    font-family: 'Pacifico', cursive;
+    color:#d14b72;
+    font-size: clamp(2rem,5vw,3rem);
+    margin-bottom:40px;
+}
+
+.countdown{
+    display:flex;
+    gap:25px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.time-box{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.time-number{
+    width:100px;
+    height:100px;
+    border-radius:20px;
+    background: linear-gradient(145deg,#ff8aa5,#e05c7a);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+    font-weight:bold;
+    box-shadow:0 15px 30px rgba(0,0,0,0.15);
+}
+
+.time-label{
+    margin-top:10px;
+    font-size:14px;
+    color:#b85a72;
+}
 #loader {
     position: fixed;
     top: 0;
@@ -360,6 +412,38 @@ button:active{
 </head>
 
 <body>
+<!-- ================= COUNTDOWN LOCK ================= -->
+
+<div id="birthdayLock">
+
+    <h1 class="countdown-title">🎂 Surprise dans ...</h1>
+
+    <div class="countdown">
+
+        <div class="time-box">
+            <div class="time-number" id="days">00</div>
+            <div class="time-label">Jours</div>
+        </div>
+
+        <div class="time-box">
+            <div class="time-number" id="hours">00</div>
+            <div class="time-label">Heures</div>
+        </div>
+
+        <div class="time-box">
+            <div class="time-number" id="minutes">00</div>
+            <div class="time-label">Minutes</div>
+        </div>
+
+        <div class="time-box">
+            <div class="time-number" id="seconds">00</div>
+            <div class="time-label">Secondes</div>
+        </div>
+
+    </div>
+
+</div>
+
 <div id="loader">
     <div class="loader-content">
         <span style="font-size: 50px;">🎂</span>
@@ -453,7 +537,7 @@ button:active{
   </div>
 </div>
 <!-- Section spéciale -->
-<div class="section" style="margin-top: -200px;">
+<div class="section" style="margin-top: -150px;">
     <div class="special">
         <video src="gif.mp4" autoplay muted loop playsinline></video>
         <h2>💌 Special Message For You</h2>
@@ -622,18 +706,41 @@ const bonusVideos = document.querySelectorAll("#bonusSection video");
 
 bonusVideos.forEach(video => {
     video.addEventListener("play", () => {
-        video.muted = false; // active le son automatiquement
+        // Met en pause les autres vidéos bonus quand on en lance une
+        bonusVideos.forEach(otherVideo => {
+            if (otherVideo !== video) otherVideo.pause();
+        });
+        video.muted = false;
     });
 });
-window.addEventListener("load", function() {
-    const loader = document.getElementById("loader"); // <-- ici
 
-    // On laisse le loader visible au moins 2 secondes
-    setTimeout(() => {
-        loader.classList.add("loader-hidden"); // applique la disparition
-        startTypingAndEmojis(); // lance le texte et les emojis après le loader
-    }, 2000);
-});
+/* ================= COUNTDOWN SCRIPT ================= */
+
+const birthdayDate = new Date("2026-02-25 00:00:00").getTime();
+
+function updateCountdown(){
+
+    const now = new Date().getTime();
+    const distance = birthdayDate - now;
+
+    if(distance <= 0){
+        document.getElementById("birthdayLock").style.display = "none";
+        return;
+    }
+
+    const days = Math.floor(distance/(1000*60*60*24));
+    const hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    const minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+    const seconds = Math.floor((distance%(1000*60))/1000);
+
+    document.getElementById("days").textContent = String(days).padStart(2,'0');
+    document.getElementById("hours").textContent = String(hours).padStart(2,'0');
+    document.getElementById("minutes").textContent = String(minutes).padStart(2,'0');
+    document.getElementById("seconds").textContent = String(seconds).padStart(2,'0');
+}
+
+setInterval(updateCountdown,1000);
+updateCountdown();
 </script>
 
 </body>
