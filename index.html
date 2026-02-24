@@ -7,58 +7,6 @@
 <title>Happy Birthday Latifa</title>
 
 <style>
-/* ================= COUNTDOWN LOCK ================= */
-
-#birthdayLock{
-    position: fixed;
-    inset: 0;
-    background: #ffcdd4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999999;
-    flex-direction: column;
-}
-
-.countdown-title{
-    font-family: 'Pacifico', cursive;
-    color:#d14b72;
-    font-size: clamp(2rem,5vw,3rem);
-    margin-bottom:40px;
-}
-
-.countdown{
-    display:flex;
-    gap:25px;
-    flex-wrap:wrap;
-    justify-content:center;
-}
-
-.time-box{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
-
-.time-number{
-    width:100px;
-    height:100px;
-    border-radius:20px;
-    background: linear-gradient(145deg,#ff8aa5,#e05c7a);
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:32px;
-    font-weight:bold;
-    box-shadow:0 15px 30px rgba(0,0,0,0.15);
-}
-
-.time-label{
-    margin-top:10px;
-    font-size:14px;
-    color:#b85a72;
-}
 #loader {
     position: fixed;
     top: 0;
@@ -412,38 +360,7 @@ button:active{
 </head>
 
 <body>
-<!-- ================= COUNTDOWN LOCK ================= -->
-
-<div id="birthdayLock">
-
-    <h1 class="countdown-title">🎂 Surprise dans ...</h1>
-
-    <div class="countdown">
-
-        <div class="time-box">
-            <div class="time-number" id="days">00</div>
-            <div class="time-label">Jours</div>
-        </div>
-
-        <div class="time-box">
-            <div class="time-number" id="hours">00</div>
-            <div class="time-label">Heures</div>
-        </div>
-
-        <div class="time-box">
-            <div class="time-number" id="minutes">00</div>
-            <div class="time-label">Minutes</div>
-        </div>
-
-        <div class="time-box">
-            <div class="time-number" id="seconds">00</div>
-            <div class="time-label">Secondes</div>
-        </div>
-
-    </div>
-
-</div>
-
+<audio id="birthdayAudio" src="musique.mp3"></audio>
 <div id="loader">
     <div class="loader-content">
         <span style="font-size: 50px;">🎂</span>
@@ -463,7 +380,7 @@ button:active{
    <p>
 𝒰𝓃𝑒 𝒿𝑜𝓊𝓇𝓃é𝑒 𝓈𝓅é𝒸𝒾𝒶𝓁𝑒 𝓅𝑜𝓊𝓇 𝓊𝓃𝑒 𝓅𝑒𝓇𝓈𝑜𝓃𝓃𝑒 𝑒𝓍𝒸𝑒𝓅𝓉𝒾𝑜𝓃𝓃𝑒𝓁𝓁𝑒 
 </p>
-   <button onclick="startCelebration()">𝒜𝓅𝓅𝓊𝒾𝑒 𝒾𝒸𝒾 🎉🎁</button>
+<button id="celebrateBtn">𝒜𝓅𝓅𝓊𝒾𝑒 𝒾𝒸𝒾 🎉🎁</button>
 </div>
 
 <!-- TITRE SOUVENIRS -->
@@ -516,11 +433,11 @@ button:active{
     </div>
     <div class="card">
       <video src="bonus2.mp4#t=0.001" muted playsinline controls></video>
-      <div class="description">Sarap lii</div>
+      <div class="description">Li meunoul nekk</div>
     </div>
     <div class="card">
       <video src="bonus3.mp4#t=0.001" muted playsinline controls></video>
-      <div class="description">Do sakh rouss</div>
+      <div class="description">Saw katou lal</div>
     </div>
     <div class="card">
       <video src="bonus4.mp4#t=0.001" muted playsinline controls></video>
@@ -541,7 +458,9 @@ button:active{
     <div class="special">
         <video src="gif.mp4" autoplay muted loop playsinline></video>
         <h2>💌 Special Message For You</h2>
-        <p>Écris ici ton message spécial pour Latifa.</p>
+        <p>Joyeux anniversaire 🥳🎂Latifa, ma vie , ma moitié longue vie a toi plein de santé et de réussite inchallah 🤲🏾 vraiment nitt kou bakh nga khawma sakh louma wara wakh t’es tjrs là pour moi dans les bon comme dans les mauvais moments(srtt dans les moments  les plus sombres de ma life), tu apporte tellement de joie et de bonheur dans ma vie et je te suis reconnaissant🥲 dila nianal juste yalla bayi lafi bassi kanam ba sa projets yeup matt, t’es la plus gentille et la meilleure amie que l’on puisse rever 🤭loum beugu wakh rk khepp ko doundeul boy sam talibé cheikh bii🫶🏾💗</p>
+
+
     </div>
 </div>
 
@@ -560,6 +479,29 @@ button:active{
 </div>
 
 <script>
+const birthdayAudio = document.getElementById("birthdayAudio");
+birthdayAudio.volume = 0.5;
+
+document.getElementById("celebrateBtn").addEventListener("click", () => {
+    birthdayAudio.currentTime = 0;
+    birthdayAudio.play().catch(err => console.log("Lecture audio bloquée :", err));
+
+    // Arrêter le son après 12 secondes si aucune vidéo bonus ne démarre
+    const stopTimeout = setTimeout(() => {
+        birthdayAudio.pause();
+    }, 12000);
+
+    startCelebration();
+
+    // Si une vidéo bonus démarre, stoppe immédiatement le son et annule le timeout
+    const bonusVideos = document.querySelectorAll("#bonusSection video");
+    bonusVideos.forEach(video => {
+        video.addEventListener("play", () => {
+            birthdayAudio.pause();
+            clearTimeout(stopTimeout); // empêche le setTimeout de relancer le pause
+        });
+    });
+});
 const text="Happy Birthday, Latifa🎂";
 let loveInterval = null;
 let i=0;
@@ -713,35 +655,21 @@ bonusVideos.forEach(video => {
         video.muted = false;
     });
 });
+window.addEventListener("load", function() {
+    const loader = document.getElementById("loader"); 
 
-/* ================= COUNTDOWN SCRIPT ================= */
+    // On laisse le loader visible au moins 2 secondes
+    setTimeout(() => {
+        loader.classList.add("loader-hidden"); // applique la disparition
+        startTypingAndEmojis(); // lance le texte et les emojis après le loader
 
-const birthdayDate = new Date("2026-02-25 00:00:00").getTime();
-
-function updateCountdown(){
-
-    const now = new Date().getTime();
-    const distance = birthdayDate - now;
-
-    if(distance <= 0){
-        document.getElementById("birthdayLock").style.display = "none";
-        return;
-    }
-
-    const days = Math.floor(distance/(1000*60*60*24));
-    const hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-    const minutes = Math.floor((distance%(1000*60*60))/(1000*60));
-    const seconds = Math.floor((distance%(1000*60))/1000);
-
-    document.getElementById("days").textContent = String(days).padStart(2,'0');
-    document.getElementById("hours").textContent = String(hours).padStart(2,'0');
-    document.getElementById("minutes").textContent = String(minutes).padStart(2,'0');
-    document.getElementById("seconds").textContent = String(seconds).padStart(2,'0');
-}
-
-setInterval(updateCountdown,1000);
-updateCountdown();
+        // 🔊 Joue le son Happy Birthday
+        const audio = document.getElementById("birthdayAudio");
+        audio.play().catch(err => console.log("Lecture audio bloquée :", err));
+    }, 2000);
+});
 </script>
 
 </body>
+
 </html>
